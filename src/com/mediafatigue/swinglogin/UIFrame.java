@@ -1,9 +1,14 @@
 package com.mediafatigue.swinglogin;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -14,13 +19,16 @@ import java.io.IOException;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.border.Border;
 
 /**
  * 
@@ -48,7 +56,7 @@ public class UIFrame extends JFrame{
 	public UIFrame(int xC, int yC, String title) {
 		x = xC;
 		y = yC;
-		height = 170;
+		height = 180;
 		width = 300;
 		setBounds(x, y, width, height);
 		setTitle(title);
@@ -230,7 +238,7 @@ public class UIFrame extends JFrame{
 				setVisible(false);
 				mainPanel.remove(loginPanel);
 				mainPanel.add(setupPanel);
-				setBounds(x, y, width, height + 20);
+				setBounds(x, y, width, height + 25);
 				setVisible(true);
 			}
 		});
@@ -254,6 +262,12 @@ public class UIFrame extends JFrame{
 		setButton.addActionListener(attemptCreateAccount);
 		pWordConfirm.addActionListener(attemptCreateAccount);
 		
+		addCustomBorder(logButton, 5, 1f);
+		addCustomBorder(uName, 5, 1f);
+		addCustomBorder(uNameSetup, 5, 1f);
+		addCustomBorder(pWordConfirm, 5, 1f);
+		addCustomBorder(backButton, 5, 1f);
+		
 		contextLabel = new JLabel("Please enter a username and password.");
 		contextLabel.setForeground(Color.white);
 		contextLabel.setFont(new Font("Tahoma", Font.BOLD, 12));
@@ -262,4 +276,72 @@ public class UIFrame extends JFrame{
 		mainPanel.add(loginPanel);
 		this.setVisible(true);
 	}
+	
+	/**
+	 * Adds a custom margin to a JComponent, with variable transparency to the component's background.
+	 * @param component The object to add the margin to.
+	 * @param thickness The width of the margin.
+	 * @param transparency How opaque the margin should be, from 0.0f to 1.0f.
+	 */
+	public static void addCustomBorder(JComponent component, int thickness, float transparency) {
+
+        Border transparentBorder = new CustomBorder(thickness, transparency);
+
+        if (component.getBorder() != null) {
+            component.setBorder(BorderFactory.createCompoundBorder(transparentBorder, component.getBorder()));
+        } else {
+            component.setBorder(transparentBorder);
+        }
+	}
+	
+	/**
+     * Custom border class that paints a border, because Swing layouts do not understand what margins are.
+     */
+    static class CustomBorder implements Border {
+        private final int thickness;
+        private final float transparency;
+
+        public CustomBorder(int thickness, float transparency) {
+            this.thickness = thickness;
+            this.transparency = transparency;
+        }
+
+        @Override
+        public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
+            Graphics2D g2d = (Graphics2D) g.create();
+
+            Color parentColor = getParentBackgroundColor(c);
+            if (parentColor == null) {
+                parentColor = Color.LIGHT_GRAY; // Fallback color
+            }
+            
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, transparency));
+            g2d.setColor(parentColor);
+
+            g2d.fillRect(x, y, width, thickness); // Top
+            g2d.fillRect(x, y + height - thickness, width, thickness); // Bottom
+            g2d.fillRect(x, y, thickness, height); // Left
+            g2d.fillRect(x + width - thickness, y, thickness, height); // Right
+
+            g2d.dispose();
+        }
+        
+        private Color getParentBackgroundColor(Component c) {
+            Container parent = c.getParent();
+            if (parent != null) {
+                return parent.getBackground();
+            }
+            return null;
+        }
+
+        @Override
+        public Insets getBorderInsets(Component c) {
+            return new Insets(thickness, thickness, thickness, thickness);
+        }
+
+        @Override
+        public boolean isBorderOpaque() {
+            return false; // Because it's transparent
+        }
+    }
 }
