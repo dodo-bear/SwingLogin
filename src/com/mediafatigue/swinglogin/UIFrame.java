@@ -3,6 +3,7 @@ package com.mediafatigue.swinglogin;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.EventQueue;
+import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -21,6 +22,9 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+/**
+ * 
+ */
 public class UIFrame extends JFrame{
 
 	private static final long serialVersionUID = 1L;
@@ -35,6 +39,12 @@ public class UIFrame extends JFrame{
 	
 	private JButton logButton, setButton, createButton, backButton;
 	
+	/**
+	 * Initializes a complete login interface JFrame, with account login and creation functionality.
+	 * @param xC The x-coordinate in screen space that the top left corner of the window should occupy.
+	 * @param yC The y-coordinate in screen space that the top left corner of the window should occupy.
+	 * @param title The title of the window, used as a parameter for <code>JFrame.setTitle()</code>.
+	 */
 	public UIFrame(int xC, int yC, String title) {
 		x = xC;
 		y = yC;
@@ -95,7 +105,7 @@ public class UIFrame extends JFrame{
 		});
 		
 		mainPanel = new JPanel();
-		mainPanel.setBackground(new Color(100, 100, 100));
+		mainPanel.setBackground(new Color(120, 120, 120));
 		this.add(mainPanel);
 		
 		loginPanel = new JPanel();
@@ -113,6 +123,14 @@ public class UIFrame extends JFrame{
 		createButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 		loginPanel.add(logButton);
 		loginPanel.add(createButton);
+		logButton.setFocusPainted(false);
+		logButton.setBackground(new Color(59, 89, 182));
+		logButton.setFont(new Font("Tahoma", Font.BOLD, 12));
+		logButton.setForeground(Color.white);
+		createButton.setFocusPainted(false);
+		createButton.setBackground(new Color(59, 89, 182));
+		createButton.setFont(new Font("Tahoma", Font.BOLD, 12));
+		createButton.setForeground(Color.white);
 		
 		
 		setupPanel = new JPanel();
@@ -133,6 +151,14 @@ public class UIFrame extends JFrame{
 		backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 		setupPanel.add(setButton);
 		setupPanel.add(backButton);
+		setButton.setFocusPainted(false);
+		setButton.setBackground(new Color(59, 89, 182));
+		setButton.setFont(new Font("Tahoma", Font.BOLD, 12));
+		setButton.setForeground(Color.white);
+		backButton.setFocusPainted(false);
+		backButton.setBackground(new Color(59, 89, 182));
+		backButton.setFont(new Font("Tahoma", Font.BOLD, 12));
+		backButton.setForeground(Color.white);
 		
 		Action attemptLogIn = new AbstractAction()
 		{
@@ -229,6 +255,8 @@ public class UIFrame extends JFrame{
 		pWordConfirm.addActionListener(attemptCreateAccount);
 		
 		contextLabel = new JLabel("Please enter a username and password.");
+		contextLabel.setForeground(Color.white);
+		contextLabel.setFont(new Font("Tahoma", Font.BOLD, 12));
 		
 		mainPanel.add(contextLabel);
 		mainPanel.add(loginPanel);

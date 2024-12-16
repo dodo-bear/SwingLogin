@@ -1,13 +1,23 @@
 package com.mediafatigue.swinglogin;
 
+/**
+ * A reimplementation of <code>ArrayList</code> functionality from the ground up, to allow dynamic array sizing.
+ */
 public class BootlegArrayList {
 
 	Object[] arr;
 	
+	/**
+	 * Sets up an empty, sizeless <code>Object[]</code>, which will be given a size later.
+	 */
 	public BootlegArrayList() {
 		arr = new Object[0];
 	}
 	
+	/**
+	 * Adds an item to the list, expanding the array if necessary.
+	 * @param obj The item to be added.
+	 */
 	public void add(Object obj) {
 		if(arr.length == 0 || arr[arr.length - 1] != null) {
 			Object[] arrNew = new Object[arr.length + 1];
@@ -17,6 +27,10 @@ public class BootlegArrayList {
 		arr[arr.length - 1] = obj;
 	}
 	
+	/**
+	 * Removes the selected item from the list, decrementing the indices of higher items and shortening the overall array.
+	 * @param obj The item to be removed.
+	 */
 	public void remove(Object obj) {
 		int index = find(obj);
 		if(index != -1) {
@@ -32,6 +46,11 @@ public class BootlegArrayList {
 		}
 	}
 	
+	/**
+	 * Determines the position of an item in the list.
+	 * @param obj The item to be located.
+	 * @return The index of the item in the list, -1 if it is not present.
+	 */
 	public int find(Object obj) {
 		for(int i = 0; i < arr.length; i++) {
 			if(arr[i].equals(obj)) {
@@ -41,6 +60,11 @@ public class BootlegArrayList {
 		return -1;
 	}
 	
+	/**
+	 * Copies the contents of one array into another, truncating any excess values.
+	 * @param arr1 The array to take data from.
+	 * @param arr2 The array to paste values into.
+	 */
 	public void copyTo(Object[] arr1, Object[] arr2) {
 		for(int i = 0; i < arr1.length; i++) {
 			if(i + 1 <= arr2.length) {
@@ -49,6 +73,11 @@ public class BootlegArrayList {
 		}
 	}
 	
+	/**
+	 * Convenience method, converts an <code>Object</code> array of <code>String</code> arrays into a 2D <code>String</code> array.
+	 * @param input The array to be converted.
+	 * @return input, with its type changed to <code>String</code>.
+	 */
 	public static String[][] castToStringArray(Object[] input) {
         String[][] result = new String[input.length][];
         for (int i = 0; i < input.length; i++) {
