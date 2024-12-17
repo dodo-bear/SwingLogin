@@ -20,7 +20,7 @@ public class LoginManager {
 		new UIFrame(50, 50, "Login");
 
 		File f = new File(fileName);
-		if(f.isFile()) {
+		if(f.isFile()) {//Is there already a data file?
 			try {
 				data.setArray(DatabaseManager.readFromFile(fileName));
 				System.out.println("Read data to internal");
@@ -28,7 +28,7 @@ public class LoginManager {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		} else {
+		} else {//Get ready to make a new one
 			data.setArray(new String[0][2]);
 		}
 	}

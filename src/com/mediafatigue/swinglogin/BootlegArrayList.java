@@ -11,7 +11,7 @@ public class BootlegArrayList {
 	 * Sets up an empty, sizeless <code>Object[]</code>, which will be given a size later.
 	 */
 	public BootlegArrayList() {
-		arr = new Object[0];
+		arr = new Object[0]; //Empty, because we resize it later.
 	}
 	
 	/**
@@ -19,12 +19,12 @@ public class BootlegArrayList {
 	 * @param obj The item to be added.
 	 */
 	public void add(Object obj) {
-		if(arr.length == 0 || arr[arr.length - 1] != null) {
-			Object[] arrNew = new Object[arr.length + 1];
+		if(arr.length == 0 || arr[arr.length - 1] != null) { //Will adding something overflow the array?
+			Object[] arrNew = new Object[arr.length + 1]; //If it will, make a bigger one and throw out the old one.
 			copyTo(arr, arrNew);
 			arr = arrNew;
 		}
-		arr[arr.length - 1] = obj;
+		arr[arr.length - 1] = obj; //Append the thing we're adding.
 	}
 	
 	/**
@@ -33,15 +33,15 @@ public class BootlegArrayList {
 	 */
 	public void remove(Object obj) {
 		int index = find(obj);
-		if(index != -1) {
+		if(index != -1) { //Make sure it's there at all.
 			arr[index] = null;
-			for(int i = 0; i < arr.length; i++) {
+			for(int i = 0; i < arr.length; i++) { //Decrement everything after it, leaving a duplicate element at the end...
 				if(i > index) {
 					arr[i-1] = arr[i];
 				}
 			}
 			Object[] arrNew = new Object[arr.length - 1];
-			copyTo(arr, arrNew);
+			copyTo(arr, arrNew); //...which is truncated away here.
 			arr = arrNew;
 		}
 	}
@@ -80,7 +80,7 @@ public class BootlegArrayList {
 	 */
 	public static String[][] castToStringArray(Object[] input) {
         String[][] result = new String[input.length][];
-        for (int i = 0; i < input.length; i++) {
+        for (int i = 0; i < input.length; i++) { //Make an antirely new array and flow everything into it
             result[i] = new String[((Object[])input[i]).length];
             for (int j = 0; j < ((Object[])input[i]).length; j++) {
                 result[i][j] = (String) ((Object[])input[i])[j];

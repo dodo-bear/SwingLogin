@@ -65,57 +65,52 @@ public class UIFrame extends JFrame{
 
 			@Override
 			public void windowOpened(WindowEvent e) {
-				// TODO Auto-generated method stub
 				
 			}
 
 			@Override
-			public void windowClosing(WindowEvent e) {
+			public void windowClosing(WindowEvent e) {//Tear down user data and log it to the file when the window closes
 				try {
 					DatabaseManager.writeToFile(LoginManager.getData(), LoginManager.getFileName());
 					System.out.println("Wrapped up successfully");
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
 
 			@Override
 			public void windowClosed(WindowEvent e) {
-				// TODO Auto-generated method stub
 				
 			}
 
 			@Override
 			public void windowIconified(WindowEvent e) {
-				// TODO Auto-generated method stub
 				
 			}
 
 			@Override
 			public void windowDeiconified(WindowEvent e) {
-				// TODO Auto-generated method stub
 				
 			}
 
 			@Override
 			public void windowActivated(WindowEvent e) {
-				// TODO Auto-generated method stub
 				
 			}
 
 			@Override
 			public void windowDeactivated(WindowEvent e) {
-				// TODO Auto-generated method stub
 				
 			}
 			
 		});
 		
+		//Storage panel for layouts and background
 		mainPanel = new JPanel();
 		mainPanel.setBackground(new Color(120, 120, 120));
 		this.add(mainPanel);
 		
+		//Login interface
 		loginPanel = new JPanel();
 		loginPanel.setBackground(mainPanel.getBackground());
 		uName = new JTextField(24);
@@ -140,7 +135,7 @@ public class UIFrame extends JFrame{
 		createButton.setFont(new Font("Tahoma", Font.BOLD, 12));
 		createButton.setForeground(Color.white);
 		
-		
+		//Account creation interface
 		setupPanel = new JPanel();
 		setupPanel.setBackground(mainPanel.getBackground());
 		uNameSetup = new JTextField(24);
@@ -168,25 +163,25 @@ public class UIFrame extends JFrame{
 		backButton.setFont(new Font("Tahoma", Font.BOLD, 12));
 		backButton.setForeground(Color.white);
 		
-		Action attemptLogIn = new AbstractAction()
+		Action attemptLogIn = new AbstractAction()//Checks for a valid account matching the user's information
 		{
 		    @Override
 		    public void actionPerformed(ActionEvent e)
 		    {
 		    	String[][] data = LoginManager.getData();
 				boolean found = false;
-				for(String[] arr : data) {
+				for(String[] arr : data) { //Search for a matching combination
 					if(arr[0].equals(uName.getText()) && arr[1].equals(DatabaseManager.generateStackHash(String.copyValueOf(pWord.getPassword())) + "")) {
 						found = true;
 						break;
 					}
 				}
-				if(found) {
+				if(found) { //Log the success and close the window
 					System.out.println("Logged in successfully. User: " + uName.getText());
 					Toolkit tk = Toolkit.getDefaultToolkit();
 			        EventQueue evtQ = tk.getSystemEventQueue();
 			        evtQ.postEvent(new WindowEvent((Window) logButton.getParent().getParent().getParent().getParent().getParent().getParent(), WindowEvent.WINDOW_CLOSING));
-				} else {
+				} else { //Clear fields and try again
 					contextLabel.setText("Incorrect username or password.");
 					uName.setText("");
 					pWord.setText("");
@@ -194,35 +189,35 @@ public class UIFrame extends JFrame{
 		    }
 		};
 		
-		Action attemptCreateAccount = new AbstractAction()
+		Action attemptCreateAccount = new AbstractAction()//Tries to create a new account and add it to the user data
 		{
 		    @Override
 		    public void actionPerformed(ActionEvent e)
 		    {
 		    	String[][] data = LoginManager.getData();
 				boolean found = false;
-				for(String[] arr : data) {
+				for(String[] arr : data) { //Check if it already exists
 					if(arr[0].equals(uNameSetup.getText())) {
 						found = true;
 						break;
 					}
 				}
-				if(found) {
+				if(found) {//If the account exists already
 					uNameSetup.setText("");
 					pWordSetup.setText("");
 					pWordConfirm.setText("");
 					contextLabel.setText("Username already in use.");
-				} else if (!pWordSetup.getText().equals(pWordConfirm.getText())){
+				} else if (!pWordSetup.getText().equals(pWordConfirm.getText())){//If the user's passwords do not match
 					uNameSetup.setText("");
 					pWordSetup.setText("");
 					pWordConfirm.setText("");
 					contextLabel.setText("Passwords do not match.");
-				} else if (pWordConfirm.getText().length() < 8){
+				} else if (pWordConfirm.getText().length() < 8){//If the password is too short
 					uNameSetup.setText("");
 					pWordSetup.setText("");
 					pWordConfirm.setText("");
 					contextLabel.setText("Password must be at least 8 characters.");
-				} else {
+				} else {//Add the new data and return to login screen
 					LoginManager.getArrList().add(new String[] {uNameSetup.getText(), DatabaseManager.generateStackHash(pWordSetup.getText()) + ""});
 					contextLabel.setText("Account created successfully.");
 					System.out.println("Account created successfully.");
@@ -232,7 +227,7 @@ public class UIFrame extends JFrame{
 		};
 		
 		
-		createButton.addActionListener(new ActionListener() {
+		createButton.addActionListener(new ActionListener() { //Unloads window, replaces contents, reloads with alternate contents
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				setVisible(false);
@@ -243,7 +238,7 @@ public class UIFrame extends JFrame{
 			}
 		});
 		
-		backButton.addActionListener(new ActionListener() {
+		backButton.addActionListener(new ActionListener() { //Same as above, in the opposite direction
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -256,12 +251,14 @@ public class UIFrame extends JFrame{
 			
 		});
 		
+		//Setting up button/enter key triggers
 		logButton.addActionListener(attemptLogIn);
 		pWord.addActionListener(attemptLogIn);
 		
 		setButton.addActionListener(attemptCreateAccount);
 		pWordConfirm.addActionListener(attemptCreateAccount);
 		
+		//Adding margins
 		addCustomBorder(logButton, 5, 1f);
 		addCustomBorder(uName, 5, 1f);
 		addCustomBorder(uNameSetup, 5, 1f);
@@ -283,7 +280,7 @@ public class UIFrame extends JFrame{
 	 * @param thickness The width of the margin.
 	 * @param transparency How opaque the margin should be, from 0.0f to 1.0f.
 	 */
-	public static void addCustomBorder(JComponent component, int thickness, float transparency) {
+	public static void addCustomBorder(JComponent component, int thickness, float transparency) { //Adds a custom border, making sure not to overwrite the old one if it exists
 
         Border transparentBorder = new CustomBorder(thickness, transparency);
 
@@ -307,7 +304,7 @@ public class UIFrame extends JFrame{
         }
 
         @Override
-        public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
+        public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) { //Makes colored rectangles around the Component as a forced border
             Graphics2D g2d = (Graphics2D) g.create();
 
             Color parentColor = getParentBackgroundColor(c);
@@ -315,7 +312,7 @@ public class UIFrame extends JFrame{
                 parentColor = Color.LIGHT_GRAY; // Fallback color
             }
             
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, transparency));
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, transparency)); //Sliding value for translucency
             g2d.setColor(parentColor);
 
             g2d.fillRect(x, y, width, thickness); // Top
@@ -326,7 +323,7 @@ public class UIFrame extends JFrame{
             g2d.dispose();
         }
         
-        private Color getParentBackgroundColor(Component c) {
+        private Color getParentBackgroundColor(Component c) { //Safety catch for making "transparency" work
             Container parent = c.getParent();
             if (parent != null) {
                 return parent.getBackground();
@@ -335,7 +332,7 @@ public class UIFrame extends JFrame{
         }
 
         @Override
-        public Insets getBorderInsets(Component c) {
+        public Insets getBorderInsets(Component c) { //Never used, breaks if removed
             return new Insets(thickness, thickness, thickness, thickness);
         }
 

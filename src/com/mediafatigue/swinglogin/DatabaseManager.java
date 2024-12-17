@@ -23,13 +23,13 @@ public class DatabaseManager {
      */
     public static void writeToFile(String[][] data, String fileName) throws IOException {
     	
-    	PrintWriter clearer = new PrintWriter(new File(fileName));
+    	PrintWriter clearer = new PrintWriter(new File(fileName)); //Clear the file's contents
     	clearer.print("");
     	clearer.close();
     	
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) { //Iterate through the list, separating usernames and passwords with the delimiter.
             for (String[] row : data) {
-                if (row.length != 2) {
+                if (row.length != 2) {//If the user has somehow gained unloggable data that we don't know how to handle
                     throw new IOException("Invalid column count for entry: " + row.length);
                 }
                 writer.write(String.join(DELIMITER, row));
@@ -48,7 +48,7 @@ public class DatabaseManager {
         BootlegArrayList rows = new BootlegArrayList();
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String line;
-            while ((line = reader.readLine()) != null) {
+            while ((line = reader.readLine()) != null) { //Flow the file into the list, taking out the delimiter and separating entries.
                 String[] row = line.split(DELIMITER);
                 if (row.length != 2) {
                     throw new IOException("Invalid column count found: " + row.length);
